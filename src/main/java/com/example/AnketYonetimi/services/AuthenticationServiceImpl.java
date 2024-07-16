@@ -100,7 +100,7 @@ public class AuthenticationServiceImpl implements  AuthenticationService{
         authenticationResponse.setJwt(jwt);
         authenticationResponse.setRefreshToken(refreshToken);
         authenticationResponse.setExpirationTime("24Hrs");
-        authenticationResponse.setId(Integer.valueOf(user.getId()));//response da long -> int yaptım
+        authenticationResponse.setId(Math.toIntExact(user.getId()));//response da long -> int yaptım
         authenticationResponse.setRole(user.getRole());
         System.out.println(user.getRole());
         authenticationResponse.setMessage("succesfully logged in");
@@ -182,7 +182,7 @@ public class AuthenticationServiceImpl implements  AuthenticationService{
     public AuthenticationResponse getUsersById(Integer id) {
         AuthenticationResponse reqRes = new AuthenticationResponse();
         try {
-            User usersById = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User Not found"));
+            User usersById = userRepository.findById(Long.valueOf(id)).orElseThrow(() -> new RuntimeException("User Not found"));
             reqRes.setUsers(usersById);
             reqRes.setStatusCode(200);
             reqRes.setMessage("Users with id '" + id + "' found successfully");
@@ -198,9 +198,9 @@ public class AuthenticationServiceImpl implements  AuthenticationService{
     public AuthenticationResponse deleteUser(Integer userId) {
         AuthenticationResponse reqRes = new AuthenticationResponse();
         try {
-            Optional<User> userOptional = userRepository.findById(userId);
+            Optional<User> userOptional = userRepository.findById(Long.valueOf(userId));
             if (userOptional.isPresent()) {
-                userRepository.deleteById(userId);
+                userRepository.deleteById(Long.valueOf(userId));
                 reqRes.setStatusCode(200);
                 reqRes.setMessage("User deleted successfully");
             } else {
@@ -217,7 +217,7 @@ public class AuthenticationServiceImpl implements  AuthenticationService{
     public AuthenticationResponse updateUser(Integer userId, User updatedUser) {
         AuthenticationResponse reqRes = new AuthenticationResponse();
         try {
-            Optional<User> userOptional = userRepository.findById(userId);
+            Optional<User> userOptional = userRepository.findById(Long.valueOf(userId));
             if (userOptional.isPresent()) {
                 User existingUser = userOptional.get();
                 existingUser.setEmail(updatedUser.getEmail());

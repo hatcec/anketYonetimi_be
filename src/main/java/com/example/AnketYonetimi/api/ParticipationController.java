@@ -1,12 +1,14 @@
 package com.example.AnketYonetimi.api;
 
 import com.example.AnketYonetimi.business.abstracts.ParticipationService;
+import com.example.AnketYonetimi.business.abstracts.SurveyService;
 import com.example.AnketYonetimi.business.dto.request.ParticipationRequest;
 import com.example.AnketYonetimi.business.dto.response.ParticipationResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,11 +18,19 @@ import java.util.List;
 @RequestMapping("api/v1/participation")
 public class ParticipationController {
     private ParticipationService participationService;
-    @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public ParticipationResponse addParticipation(@Valid @RequestBody ParticipationRequest participationRequest) {
-        return participationService.addParticipation(participationRequest);
+    @PostMapping("/{surveyId}/participate")
+    public ResponseEntity<Void> participateInSurvey(
+            @PathVariable Long surveyId,
+            @RequestParam Long userId,
+            @RequestBody List<String> answers) {
+        participationService.participateInSurvey(surveyId, userId, answers);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+//    @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public ParticipationResponse addParticipation(@Valid @RequestBody ParticipationRequest participationRequest) {
+//        return participationService.addParticipation(participationRequest);
+//    }
 
     @GetMapping(value = "/get/all", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)

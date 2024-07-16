@@ -59,13 +59,13 @@ public class QuestionManager implements QuestionService {
     }
 
     @Override
-    public void deleteQuestion(int questionId) {
+    public void deleteQuestion(Long questionId) {
         Question question=questionRepository.getById(questionId);
         questionRepository.delete(question);
     }
 
     @Override
-    public QuestionResponse getQuestionById(int id) {
+    public QuestionResponse getQuestionById(Long id) {
         Question  question = questionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("There is no Question for this ID."));
 

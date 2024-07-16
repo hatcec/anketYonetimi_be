@@ -8,7 +8,8 @@ import com.example.AnketYonetimi.business.dto.response.QuestionResponse;
 import java.util.List;
 
 public interface ParticipationService {
-    ParticipationResponse addParticipation (ParticipationRequest participationRequest);
+    void participateInSurvey(Long surveyId, Long userId, List<String> answers);
+   // ParticipationResponse addParticipation (ParticipationRequest participationRequest);
     List<ParticipationResponse> getAllParticipation();
     ParticipationResponse updateParticipation(ParticipationRequest participationRequest);
     void deleteParticipation(int participationId);

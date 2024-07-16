@@ -6,6 +6,7 @@ import com.example.AnketYonetimi.business.dto.response.QuestionResponse;
 import com.example.AnketYonetimi.business.dto.response.SurveyResponse;
 import com.example.AnketYonetimi.core.utilities.mapping.ModelMapperService;
 import com.example.AnketYonetimi.dataAccess.QuestionRepository;
+import com.example.AnketYonetimi.dataAccess.SurveyQuestionRepository;
 import com.example.AnketYonetimi.dataAccess.SurveyRepository;
 import com.example.AnketYonetimi.entities.Question;
 import com.example.AnketYonetimi.entities.Survey;
@@ -14,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.hibernate.annotations.SecondaryRow;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,45 +27,23 @@ public class SurveyManager implements SurveyService {
     private SurveyRepository surveyRepository;
     private ModelMapperService modelMapperService;
     private QuestionRepository questionRepository;
-    @Override
-    public void saveSelections(SurveyRequest request) {
-        String name = request.getName();
-        List<Question> selections = request.getQuestionIds();
+    private SurveyQuestionRepository surveyQuestionRepository;
+    public Survey createSurvey(String name, List<Long> questionIds) {
+        Survey survey = new Survey();
+        survey.setName(name);
+        survey.setCreatedDate(LocalDate.now().atStartOfDay());
+        survey = surveyRepository.save(survey);
 
-        Survey selection = new Survey();
-        selection.setName(name);
-        selection.setQuestions(selections);
+        for (Long questionId : questionIds) {
+            Question question = questionRepository.findById(questionId).orElseThrow();
+            SurveyQuestion surveyQuestion = new SurveyQuestion();
+            surveyQuestion.setSurvey(survey);
+            surveyQuestion.setQuestion(question);
+            surveyQuestionRepository.save(surveyQuestion);
+        }
 
-        surveyRepository.save(selection);
+        return survey;
     }
-//        Survey survey = new Survey();
-//        List<Question> questions = questionRepository.findAllById(surveyRequest.getQuestionIds());
-//        survey.setQuestions(questions);
-//        Survey createdSurvey = this.surveyRepository.save(survey);
-//        SurveyResponse createdSurveyResponse =
-//                this.modelMapperService.forResponse().map(createdSurvey, SurveyResponse.class);
-//        return createdSurveyResponse;
-
-//        Survey survey = new Survey();
-//        survey.setName(surveyRequest.getName());
-//        survey.setCreatedDate(LocalDateTime.now());
-//
-//        List<SurveyQuestion> surveyQuestions = new ArrayList<>();
-//        for (int questionId : surveyRequest.getQuestionIds()) {
-//            Question question = questionRepository.findById(questionId)
-//                    .orElseThrow(() -> new RuntimeException("Question not found: " + questionId));
-//            SurveyQuestion surveyQuestion = new SurveyQuestion();
-//            surveyQuestion.setSurvey(survey);
-//            surveyQuestion.setQuestion(question);
-//            surveyQuestions.add(surveyQuestion);
-//        }
-//        survey.setSurveyQuestions(surveyQuestions);
-
-//        return surveyRepository.save(survey);
-//        Survey survey = this.modelMapperService.forRequest().map(surveyRequest, Survey.class);
-//        survey.setCreatedDate(LocalDateTime.now());
-//
-//
 
 
     @Override
@@ -83,14 +63,16 @@ public class SurveyManager implements SurveyService {
         return surveyResponse;
     }
 
+
+
     @Override
-    public void deleteSurvey(int surveyId) {
+    public void deleteSurvey(Long surveyId) {
         Survey survey=surveyRepository.getById(surveyId);
         surveyRepository.delete(survey);
     }
 
     @Override
-    public SurveyResponse getSurveyById(int id) {
+    public SurveyResponse getSurveyById(Long id) {
         Survey  survey = surveyRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("There is no Survey for this ID."));
 

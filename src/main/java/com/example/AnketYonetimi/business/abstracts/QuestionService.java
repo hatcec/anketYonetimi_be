@@ -11,6 +11,6 @@ public interface QuestionService {
     QuestionResponse addQuestion (QuestionRequest questionRequest);
     List<QuestionResponse> getAllQuestion();
     QuestionResponse updateQuestion(QuestionRequest questionRequest);
-    void deleteQuestion(int questionId);
-    QuestionResponse getQuestionById(  int id );
+    void deleteQuestion(Long questionId);
+    QuestionResponse getQuestionById(  Long id );
 }

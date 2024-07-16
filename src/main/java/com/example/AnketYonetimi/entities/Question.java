@@ -1,6 +1,7 @@
 package com.example.AnketYonetimi.entities;
 
 import com.example.AnketYonetimi.core.entities.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,13 +19,10 @@ import java.util.List;
 public class Question extends BaseEntity {
 
 
-    @Column(name = "questionText")
-    private  String questionText;
 
-//    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
-//    private List<SurveyQuestion> surveyQuestions;
+    private String questionText;
+    @OneToMany(mappedBy = "question")
+    @JsonBackReference
+    private List<SurveyQuestion> surveyQuestions;
 
-//    @ManyToOne
-//    @JoinColumn(name="surveyId")
-//    private Survey survey;
 }

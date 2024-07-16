@@ -46,11 +46,11 @@ public class QuestionController {
 
 
     @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public QuestionResponse getQuestionById( @PathVariable int id ){
+    public QuestionResponse getQuestionById( @PathVariable Long id ){
         return questionService.getQuestionById(id);
     }
     @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void deleteQuestion(@PathVariable int id) {
+    public void deleteQuestion(@PathVariable Long id) {
         questionService.deleteQuestion(id);
     }
 }

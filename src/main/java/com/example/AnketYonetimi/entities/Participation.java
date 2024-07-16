@@ -15,15 +15,15 @@ import java.util.List;
 @Table(name = "participations")
 public class Participation extends BaseEntity {
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "survey_id", nullable = false)
+    @JoinColumn(name = "survey_id")
     private Survey survey;
 
     @ElementCollection
     private List<String> answers;
-    private Role role;
+
 
 }

@@ -28,33 +28,12 @@ public class SurveyController {
     private SurveyRepository surveyRepository;
     private QuestionRepository questionRepository;
     private SurveyQuestionRepository  surveyQuestionRepository;
-    @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> saveSelections(@RequestBody SurveyRequest request) {
-        surveyService.saveSelections(request);
-        return ResponseEntity.ok("Veriler başarıyla kaydedildi");
+    @PostMapping
+    public ResponseEntity<Survey> createSurvey(@RequestBody SurveyRequest surveyRequest) {
+        Survey survey = surveyService.createSurvey(surveyRequest.getName(), surveyRequest.getQuestionIds());
+        return new ResponseEntity<>(survey, HttpStatus.CREATED);
     }
-//    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> createSurveyWithQuestions(@RequestBody SurveyRequest surveyRequest) {
-        // Create the survey
-//        Survey survey = new Survey();
-//        survey.setName(surveyRequest.getName());
-//        Survey savedSurvey = surveyRepository.save(survey);
-//
-//        // Add questions to the survey
-//        List<SurveyQuestion> surveyQuestions = surveyRequest.getQuestionIds().stream()
-//                .map(id -> {
-//                    Question question = questionRepository.findById().orElseThrow();
-//                    SurveyQuestion surveyQuestion = new SurveyQuestion();
-//                    surveyQuestion.setSurvey(savedSurvey);
-//                    surveyQuestion.setQuestion(question);
-//                    return surveyQuestion;
-//                }).collect(Collectors.toList());
-//
-//        surveyQuestionRepository.saveAll(surveyQuestions);
-//
-//        return ResponseEntity.ok("Survey and questions created successfully");
-   // }
+
 
     @GetMapping(value = "/get/all", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
@@ -70,11 +49,11 @@ public class SurveyController {
 
 
     @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public SurveyResponse getSurveyById( @PathVariable int id ){
+    public SurveyResponse getSurveyById( @PathVariable Long id ){
         return surveyService.getSurveyById(id);
     }
     @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void deleteSurvey(@PathVariable int id) {
+    public void deleteSurvey(@PathVariable Long id) {
         surveyService.deleteSurvey(id);
     }
 

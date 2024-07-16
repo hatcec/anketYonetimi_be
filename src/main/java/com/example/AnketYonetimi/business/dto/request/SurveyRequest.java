@@ -13,11 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class SurveyRequest {
-    private List<Question> questionIds;
-    private  String name;
-//    private int id;
-//
-//    private LocalDateTime createdDate;
-//   private List<Integer> questionIds;
-//    private List<Participation> participations;
+    private String name;
+    private List<Long> questionIds;
+    private LocalDateTime createdDate;
+
 }
